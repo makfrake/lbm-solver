@@ -34,5 +34,5 @@ python lbm_solver.py
 ```
 ## Credits & References
 This implementation is based on the work of Philip Mocz (2020), Princeton University.
-* **Author**: Philip Mocs ([@PMoc](https://github.com/pmocz/))
+* **Author**: Philip Mocs ([@PMocz](https://github.com/pmocz/))
 * **Original Tutorial**: [Create Your Own Lattice Boltzmann Simulation with Python](https://medium.com/swlh/create-your-own-lattice-boltzmann-simulation-with-python-8759e8b53b1c)
