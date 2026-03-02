@@ -1,19 +1,22 @@
 # Lattice Boltzmann Method (LBM) Fluid Simulation
 
-A high-performance Python implementation of the Lattice Boltzmann Method (LBM) to simulate 2D fluid flow around obstacles. This solver demonstrates how microscopic particle interactions can recover macroscopic fluid dynamics.
+A Python implementation of the Lattice Boltzmann Method (LBM) to simulate 2D fluid flow around obstacles. This solver demonstrates how microscopic particle interactions can recover macroscopic fluid dynamics.
 
 ## Overview
 Unlike traditional CFD solvers that discretize the Navier-Stokes equations, this project uses the **Lattice Boltzmann Method** with the **D2Q9** lattice configuration (2 Dimensions, 9 Velocity vectors). 
 
 The simulation implements the **BGK (Bhatnagar-Gross-Krook)** collision operator to model fluid behavior and visualize complex flow patterns, such as vortex shedding, around various geometries.
 
+## Flow Visualization
+Below is an animation of the simulation. It visualizes the evolution of the fluid's vorticity as it flows past a circular obstacle. As the simulation progresses, you can clearly observe the formation of a classic **von Kármán vortex street** in the wake of the cylinder.
+
+![Von Kármán Vortex Street](lbm_sim.gif)
+
 ## Key Features
 * **D2Q9 Lattice Model:** Standard 2D grid with 9 discrete velocity directions.
 * **Geometry Interaction:** Boundary conditions for flow around cylinders, squares, and arbitrary obstacles.
 * **Vortex Shedding:** Capable of simulating the von Kármán vortex street at different Reynolds numbers.
 * **Efficient NumPy Implementation:** Vectorized operations for faster computation of the streaming and collision steps.
-
-
 
 ## The Physics Behind It
 The solver follows the standard LBM algorithm:
@@ -32,6 +35,7 @@ Run the main script to start the simulation and view the real-time velocity fiel
 ```bash
 python lbm_solver.py
 ```
+
 ## Credits & References
 This implementation is based on the work of Philip Mocz (2020), Princeton University.
 * **Author**: Philip Mocz ([@PMocz](https://github.com/pmocz/))
