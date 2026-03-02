@@ -1,10 +1,12 @@
 import numpy as np
 from matplotlib import pyplot as plt
+from matplotlib.animation import FuncAnimation
 
-plot_every = 100
+plot_every = 30
 
 def distance(x1, y1, x2, y2):
     return np.sqrt((x2-x1)**2 + (y2-y1)**2)
+
 
 def main():
 
@@ -18,31 +20,30 @@ def main():
     Nl = 9
     cxs = np.array([0, 0, 1, 1, 1, 0,-1,-1,-1])
     cys = np.array([0, 1, 1, 0,-1,-1,-1, 0, 1])
+
     weights = np.array([4/9, 1/9, 1/36, 1/9, 1/36, 1/9, 1/36, 1/9, 1/36])
+
     X, Y = np.meshgrid(range(Nx), range(Ny))
+
     # initial conditions
 
-    F = np.ones([Ny, Nx, Nl]) + .01 * np.random.randn(Ny, Nx, Nl)      # mesoscopic velocity + random perturbations
+    F = np.ones([Ny, Nx, Nl]) + .001 * np.random.randn(Ny, Nx, Nl)      # mesoscopic velocity + random perturbations
     F[:, :, 3] = 2.3
 
     # Cylinder boundary
-    cylinder = (X - Nx / 4) ** 2 + (Y - Ny / 2) ** 2 < (Ny / 4) ** 2
 
-    '''
     cylinder = np.full((Ny, Nx), False)    # obstacle shape
 
     for y in range(0, Ny):
         for x in range(0, Nx):
-            if (distance(Nx//4, Ny//2, x, y) < 13 or distance(Nx//4, Ny//2, x, y) < 13):
-            #if(distance(0, Ny, x, y)<30 or  distance(0, 0, x, y)<30):
-            #or distance(Nx//4, 0, x, y)<30 or distance(Nx//4, Ny, x, y)<30
-            #or distance(Nx//2, 0, x, y)<30 or distance(Nx//2, Ny, x, y)<30
-            #or distance(Nx*(3/4), 0, x, y)<30 or distance(Nx*(3//4), Ny, x, y)<30):
+            if (distance(Nx//4, Ny//2, x, y) < 13):            #or distance(Nx*(3/4), 0, x, y)<30 or distance(Nx*(3//4), Ny, x, y)<30):
                 cylinder[y][x] = True
-    '''
 
+    #cylinder = (X - Nx / 4) ** 2 + (Y - Ny / 2) ** 2 < (Ny / 4) ** 2
 
     # main loop
+
+    data = []
 
     for it in range(Nt):
         print(it)
@@ -87,12 +88,31 @@ def main():
 
         if (it%plot_every == 0):
 
-            plt.imshow(np.sqrt(ux**2+uy**2))
+            vel = np.sqrt(ux**2+uy**2)
+            vort = (np.roll(ux, -1, axis=0) - np.roll(ux, 1, axis=0)) - (np.roll(uy, -1, axis=1) - np.roll(uy, 1, axis=1))
+
+            vel[cylinder] = np.nan
+            vort[cylinder] = np.nan
+
+            #vort = np.ma.array(vorticity, mask=cylinder)
+
+            data.append(vort)
+
+            plt.imshow(vort)
             plt.pause(0.1)
             plt.cla()
 
-    plt.imshow(np.sqrt(ux**2+uy**2))
-    plt.cla()
+
+
+    fig, ax = plt.subplots()
+    im = ax.imshow(data[0], cmap='bwr')
+
+    def update(frame):
+        im.set_array(data[frame])
+        return [im]
+
+    anmtn = FuncAnimation(fig, update, frames=len(data), interval=1)
+    anmtn.save('lbm_sim.gif', writer='pillow')
 
 if __name__=="__main__":
     main()
